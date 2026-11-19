@@ -1,0 +1,157 @@
+
+{% extends "base.html" %}
+
+{% block title %}Employees | PeopleDesk{% endblock %}
+
+{% block page_heading %}Employees{% endblock %}
+
+{% block content %}
+
+<div class="welcome-row">
+
+    <div>
+        <h1>Employee Management</h1>
+
+        <p class="muted">
+            Manage your company's employee records.
+        </p>
+    </div>
+
+    <a href="{{ url_for('add_employee') }}"
+       class="button button-primary">
+        + Add Employee
+    </a>
+
+</div>
+
+
+<!-- SEARCH -->
+
+<form method="GET" class="search-bar">
+
+    <input type="text"
+           name="q"
+           value="{{ q }}"
+           placeholder="Search employee name, ID or department">
+
+    <button class="button button-secondary">
+        Search
+    </button>
+
+</form>
+
+
+<!-- EMPLOYEE TABLE -->
+
+<div class="table-card">
+
+    <div class="table-caption">
+        <b>Employee Directory</b>
+        <span>{{ employees|length }} employees</span>
+    </div>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>EMPLOYEE</th>
+                    <th>DEPARTMENT</th>
+                    <th>DESIGNATION</th>
+                    <th>EMAIL</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for employee in employees %}
+
+                <tr>
+
+                    <td>
+                        <div class="person-cell">
+
+                            <span class="avatar">
+                                {{ employee.full_name[0] }}
+                            </span>
+
+                            <span>
+                                <b>{{ employee.full_name }}</b>
+
+                                <small>
+                                    {{ employee.employee_code }}
+                                </small>
+                            </span>
+
+                        </div>
+                    </td>
+
+                    <td>{{ employee.department }}</td>
+
+                    <td>{{ employee.designation or '—' }}</td>
+
+                    <td>{{ employee.email or '—' }}</td>
+
+                    <td>
+                        <span class="status
+                        {% if employee.status == 'Active' %}
+                            status-present
+                        {% else %}
+                            status-absent
+                        {% endif %}">
+                            {{ employee.status }}
+                        </span>
+                    </td>
+
+                    <td>
+
+                        <div class="action-group">
+
+                            <a href="{{ url_for('edit_employee', id=employee.id) }}"
+                               class="text-link">
+                                Edit
+                            </a>
+
+                            <form method="POST"
+                                  action="{{ url_for('delete_employee', id=employee.id) }}"
+                                  onsubmit="return confirm('Delete this employee?')">
+
+                                <input type="hidden"
+                                       name="csrf_token"
+                                       value="{{ csrf_token() }}">
+
+                                <button type="submit"
+                                        class="link-danger">
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+                    <td colspan="6" class="empty-state">
+                        No employees found. Add your first employee.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,153 @@
+
+{% extends "base.html" %}
+
+{% block title %}Reports | PeopleDesk{% endblock %}
+
+{% block page_heading %}Reports{% endblock %}
+
+{% block content %}
+
+<div class="welcome-row">
+
+    <div>
+        <h1>Attendance Reports</h1>
+
+        <p class="muted">
+            Monthly employee attendance summary.
+        </p>
+    </div>
+
+</div>
+
+
+<!-- MONTH FILTER -->
+
+<form method="GET" class="date-toolbar">
+
+    <label for="month">
+        Select Month
+    </label>
+
+    <input type="month"
+           id="month"
+           name="month"
+           value="{{ month }}">
+
+    <button type="submit"
+            class="button button-secondary">
+        Generate Report
+    </button>
+
+</form>
+
+
+<!-- REPORT TABLE -->
+
+<div class="table-card">
+
+    <div class="table-caption">
+
+        <b>Monthly Attendance Summary</b>
+
+        <span>{{ month }}</span>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>EMPLOYEE</th>
+                    <th>DEPARTMENT</th>
+                    <th>PRESENT</th>
+                    <th>ABSENT</th>
+                    <th>HALF DAY</th>
+                    <th>LEAVE</th>
+                    <th>RECORDED</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for employee in rows %}
+
+                <tr>
+
+                    <td>
+                        <div class="person-cell">
+
+                            <span class="avatar">
+                                {{ employee.full_name[0] }}
+                            </span>
+
+                            <span>
+                                <b>{{ employee.full_name }}</b>
+
+                                <small>
+                                    {{ employee.employee_code }}
+                                </small>
+                            </span>
+
+                        </div>
+                    </td>
+
+
+                    <td>
+                        {{ employee.department }}
+                    </td>
+
+
+                    <td>
+                        <span class="number-good">
+                            {{ employee.present or 0 }}
+                        </span>
+                    </td>
+
+
+                    <td>
+                        {{ employee.absent or 0 }}
+                    </td>
+
+
+                    <td>
+                        {{ employee.half_day or 0 }}
+                    </td>
+
+
+                    <td>
+                        {{ employee.leave_days or 0 }}
+                    </td>
+
+
+                    <td>
+                        {{ employee.recorded or 0 }}
+                    </td>
+
+                </tr>
+
+
+                {% else %}
+
+                <tr>
+                    <td colspan="7" class="empty-state">
+                        No employee records available.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

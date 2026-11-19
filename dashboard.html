@@ -1,0 +1,173 @@
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard | PeopleDesk{% endblock %}
+
+{% block page_heading %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="welcome-row">
+
+    <div>
+        <h1>HR Dashboard</h1>
+
+        <p class="muted">
+            Welcome back! Here is your workforce overview.
+        </p>
+    </div>
+
+    <a href="{{ url_for('attendance') }}"
+       class="button button-primary">
+        + Mark Attendance
+    </a>
+
+</div>
+
+
+<!-- STATISTICS -->
+
+<div class="stat-grid">
+
+    <article class="stat-card">
+        <div class="stat-top">
+            Total Employees
+        </div>
+
+        <strong>{{ total }}</strong>
+
+        <small>Active employees</small>
+    </article>
+
+
+    <article class="stat-card">
+        <div class="stat-top">
+            Present Today
+        </div>
+
+        <strong>{{ counts.get('Present', 0) }}</strong>
+
+        <small>Employees present</small>
+    </article>
+
+
+    <article class="stat-card">
+        <div class="stat-top">
+            Absent Today
+        </div>
+
+        <strong>{{ counts.get('Absent', 0) }}</strong>
+
+        <small>Employees absent</small>
+    </article>
+
+
+    <article class="stat-card">
+        <div class="stat-top">
+            Not Marked
+        </div>
+
+        <strong>{{ unmarked }}</strong>
+
+        <small>Attendance pending</small>
+    </article>
+
+</div>
+
+
+<!-- RECENT ATTENDANCE -->
+
+<div class="section-heading">
+
+    <div>
+        <h2>Recent Attendance</h2>
+
+        <p class="muted">
+            Latest attendance records.
+        </p>
+    </div>
+
+    <a href="{{ url_for('attendance') }}"
+       class="text-link">
+        View all →
+    </a>
+
+</div>
+
+
+<div class="table-card">
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>EMPLOYEE</th>
+                    <th>DEPARTMENT</th>
+                    <th>DATE</th>
+                    <th>STATUS</th>
+                    <th>CHECK IN</th>
+                    <th>CHECK OUT</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for employee in recent %}
+
+                <tr>
+
+                    <td>
+                        <div class="person-cell">
+
+                            <span class="avatar">
+                                {{ employee.full_name[0] }}
+                            </span>
+
+                            <span>
+                                <b>{{ employee.full_name }}</b>
+
+                                <small>
+                                    {{ employee.employee_code }}
+                                </small>
+                            </span>
+
+                        </div>
+                    </td>
+
+                    <td>{{ employee.department }}</td>
+
+                    <td>{{ employee.attendance_date }}</td>
+
+                    <td>
+                        <span class="status status-{{ employee.status|lower|replace(' ', '-') }}">
+                            {{ employee.status }}
+                        </span>
+                    </td>
+
+                    <td>{{ employee.check_in or '—' }}</td>
+
+                    <td>{{ employee.check_out or '—' }}</td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+                    <td colspan="6" class="empty-state">
+                        No attendance records available.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

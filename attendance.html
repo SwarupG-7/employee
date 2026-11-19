@@ -1,0 +1,216 @@
+
+{% extends "base.html" %}
+
+{% block title %}Attendance | PeopleDesk{% endblock %}
+
+{% block page_heading %}Attendance{% endblock %}
+
+{% block content %}
+
+<div class="welcome-row">
+
+    <div>
+        <h1>Daily Attendance</h1>
+
+        <p class="muted">
+            Record and manage employee attendance.
+        </p>
+    </div>
+
+</div>
+
+
+<!-- DATE FILTER -->
+
+<form method="GET" class="date-toolbar">
+
+    <label for="attendance_date">
+        Select Date
+    </label>
+
+    <input type="date"
+           id="attendance_date"
+           name="attendance_date"
+           value="{{ selected_date }}">
+
+    <button type="submit"
+            class="button button-secondary">
+        Load
+    </button>
+
+</form>
+
+
+<!-- ATTENDANCE FORM -->
+
+<form method="POST">
+
+    <input type="hidden"
+           name="csrf_token"
+           value="{{ csrf_token() }}">
+
+    <input type="hidden"
+           name="attendance_date"
+           value="{{ selected_date }}">
+
+
+    <div class="table-card">
+
+        <div class="table-caption">
+
+            <b>Employee Attendance Register</b>
+
+            <span>{{ selected_date }}</span>
+
+        </div>
+
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>EMPLOYEE</th>
+                        <th>DEPARTMENT</th>
+                        <th>STATUS</th>
+                        <th>CHECK IN</th>
+                        <th>CHECK OUT</th>
+                        <th>NOTES</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    {% for employee in employees %}
+
+                    <tr>
+
+                        <td>
+                            <div class="person-cell">
+
+                                <span class="avatar">
+                                    {{ employee.full_name[0] }}
+                                </span>
+
+                                <span>
+                                    <b>{{ employee.full_name }}</b>
+
+                                    <small>
+                                        {{ employee.employee_code }}
+                                    </small>
+                                </span>
+
+                            </div>
+                        </td>
+
+
+                        <td>
+                            {{ employee.department }}
+                        </td>
+
+
+                        <td>
+
+                            <select class="status-select"
+                                    name="status_{{ employee.id }}"
+                                    required>
+
+                                <option value="">
+                                    Select
+                                </option>
+
+                                {% for status in [
+                                    'Present',
+                                    'Absent',
+                                    'Half Day',
+                                    'Leave'
+                                ] %}
+
+                                <option value="{{ status }}"
+                                {% if employee.attendance_status == status %}
+                                    selected
+                                {% endif %}>
+
+                                    {{ status }}
+
+                                </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </td>
+
+
+                        <td>
+
+                            <input type="time"
+                                   class="time-input"
+                                   name="check_in_{{ employee.id }}"
+                                   value="{{ employee.check_in or '' }}">
+
+                        </td>
+
+
+                        <td>
+
+                            <input type="time"
+                                   class="time-input"
+                                   name="check_out_{{ employee.id }}"
+                                   value="{{ employee.check_out or '' }}">
+
+                        </td>
+
+
+                        <td>
+
+                            <input type="text"
+                                   class="notes-input"
+                                   name="notes_{{ employee.id }}"
+                                   value="{{ employee.notes or '' }}"
+                                   placeholder="Optional">
+
+                        </td>
+
+                    </tr>
+
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            No active employees available.
+                            Please add employees first.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div class="form-actions attendance-actions">
+
+        <span class="muted">
+            Save attendance for the selected date.
+        </span>
+
+        <button type="submit"
+                class="button button-primary"
+                {% if not employees %}disabled{% endif %}>
+            Save Attendance
+        </button>
+
+    </div>
+
+</form>
+
+{% endblock %}

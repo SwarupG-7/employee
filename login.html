@@ -1,0 +1,101 @@
+
+{% extends "base.html" %}
+
+{% block title %}Admin Login | PeopleDesk{% endblock %}
+
+{% block auth_content %}
+
+<div class="login-layout">
+
+    <section class="login-brand-panel">
+
+        <a class="brand brand-light" href="#">
+            <span class="brand-mark">P</span>
+
+            <span>
+                PeopleDesk
+                <small>HR MANAGEMENT</small>
+            </span>
+        </a>
+
+        <div class="login-message">
+
+            <span class="pill-light">
+                PEOPLE FIRST. ALWAYS.
+            </span>
+
+            <h1>
+                A better way to manage your
+                <em>people.</em>
+            </h1>
+
+            <p>
+                One simple workspace for your team,
+                attendance and everyday HR operations.
+            </p>
+
+        </div>
+
+        <div class="panel-foot">
+            Simple workforce management, thoughtfully designed.
+        </div>
+
+    </section>
+
+
+    <section class="login-form-panel">
+
+        <div class="login-form-wrap">
+
+            <span class="eyebrow">
+                ADMINISTRATOR ACCESS
+            </span>
+
+            <h2>Welcome back</h2>
+
+            <p class="muted">
+                Sign in to manage your workforce.
+            </p>
+
+            <form method="POST" class="form-stack">
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+                <label>
+                    Username
+
+                    <input type="text"
+                           name="username"
+                           placeholder="Enter username"
+                           required>
+                </label>
+
+                <label>
+                    Password
+
+                    <input type="password"
+                           name="password"
+                           placeholder="Enter password"
+                           required>
+                </label>
+
+                <button type="submit"
+                        class="button button-primary button-full">
+                    Sign in to workspace →
+                </button>
+
+            </form>
+
+            <div class="secure-note">
+                Protected administrator access
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}
